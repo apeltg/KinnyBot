@@ -1,8 +1,8 @@
 const db = require('./db.js')
 const { Client, Collection, MessageEmbed} = require('discord.js')
-const { tokenc, tokenAPI, token, spotify, nodeslava } = require("./config.json")
+const { tokenc, tokenAPI, token, spotify, nodesLava, webhookPasswordTopGG } = require("./config.json")
 const DBL = require('top.gg');
-const dbl = new DBL(tokenAPI, { webhookPort: 25685, webhookAuth: 'senha da webhook' });
+const dbl = new DBL(tokenAPI, { webhookPort: 25685, webhookAuth: webhookPasswordTopGG });
 const { Vulkava } = require('vulkava')
 const { readdir } = require('fs');
 const client = new Client({
@@ -27,7 +27,7 @@ const client = new Client({
     }
 });
 const manager = new Vulkava({
-    nodes: nodeslava,
+    nodes: nodesLava,
     sendWS: (guildId, payload) => {
         client.guilds.cache.get(guildId)?.shard.send(payload)
     },

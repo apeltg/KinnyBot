@@ -63,14 +63,15 @@ module.exports = async (client) => {
       data.options = comandos.config.options
     }
     if (client.user.id === "744285461492793445") {
-      client.guilds.cache.get('701457909267169321').commands.create(data).catch(async error => {
+      client.guilds.cache.get('800349226919788586').commands.create(data).catch(async error => {
         console.log(`[SLASH COMMANDS] Um erro aconteceu ao tentar criar slash commands! Erro: ${error.message}`.red)
       })
       return;
+    } else {
+      client.application?.commands.create(data).catch(async error => {
+        console.log(`[SLASH COMMANDS] Um erro aconteceu ao tentar criar slash commands! Erro: ${error.message}`.red)
+      })
     }
-    client.application?.commands.create(data).catch(async error => {
-      console.log(`[SLASH COMMANDS] Um erro aconteceu ao tentar criar slash commands! Erro: ${error.message}`.red)
-    })
   })
   console.log('[SLASH COMMANDS] Slash commands iniciado com sucesso (Lembrando que pode demorar 1 hora)'.green)
   let cmds = await client.application.commands.fetch()
