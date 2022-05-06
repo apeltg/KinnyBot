@@ -1,6 +1,6 @@
 # KINNY BOT
 
-O codigo está desatualizado. Então tem comandos com codigo feito de uma forma porca.
+Algumas partes da kinny estão desatualizados. Então tem comandos com codigo feito de uma forma "porca".
 
 Source code oficial da kinny bot
 O dono da handler utlizada na kinny foi: https://github.com/5antos/
