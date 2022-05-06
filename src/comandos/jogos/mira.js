@@ -33,7 +33,7 @@ module.exports = {
                 }
                 embed.setDescription(`**Jogador:** ${index2.player} \n **Time:** ${index2.time} \n **Mira:** ${index2.code}`)
                 embed.setThumbnail(index2.image)
-                embed.setFooter(`Fonte: ${index2.font} (OBS: A comunidade pode adicionar suas próprias miras.)`)
+                embed.setFooter({text: `Fonte: ${index2.font} (OBS: A comunidade pode adicionar suas próprias miras.)`})
                 interaction.channel.send({ embeds: [embed] })
             })
         })
