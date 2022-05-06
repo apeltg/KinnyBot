@@ -7,12 +7,11 @@ module.exports = {
         aliases: ['defecar']
     },
     run: async(client, message) => {
-        console.log(message.author)
-        let quts = client["comandos"+(!message.author ? message.user.id:message.author.id)]
-        let priv = await db.consu.findOne({consumidor: (!message.author ? message.user.id:message.author.id)})
+        let quts = client["comandos"+(message.user.id)]
+        let priv = await db.consu.findOne({consumidor: (message.user.id)})
         if(!priv) return message.reply('Compre uma privada antes!')
         if(!priv.produtos.includes("privada")) return message.reply('Compre uma privada antes!')
-        message.reply('<:pedrinhos:802536483886071830>\n⠀ \n⠀ \n 🚽').then(editar => {
+        message.reply({content: '<:pedrinhos:802536483886071830>\n⠀ \n⠀ \n 🚽', fetchReply: true}).then(editar => {
         setTimeout(() => {
    editar.edit('<:pedrinhos:802536483886071830>\n💩\n⠀\n \n 🚽')
         }, 1000)

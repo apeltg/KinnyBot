@@ -48,7 +48,7 @@ module.exports = {
         const membro = message.member
         ctx.strokeStyle = '#ffffff';
         ctx.strokeRect(0, 0, canvas.width, canvas.height);
-        let post = args?.join(" ") || message.options?.getString('tweet')
+        let post = message.options?.getString('tweet')
         if(post.length > 152 ) return message.reply('Só pode no maximo 152 caracteres!')
         if(post.length < 5 ) return message.reply('Só pode no minimo 5 caracteres')
         ctx.font = applyText3(canvas, post);
@@ -80,7 +80,7 @@ module.exports = {
          }, 6000)
          setTimeout(() => {
             editar.edit('<:certo:800838318651998239> Conectado com a internet \n<:certo:800838318651998239> Post criado! \n <:certo:800838318651998239> Postado')
-            message.reply({files: [attachment]});
+            message.editReply({files: [attachment]});
          }, 12000)
 
      })

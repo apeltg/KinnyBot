@@ -13,10 +13,10 @@ module.exports = {
         }],
     },
     run: async(client, message, args) => {
-        if(!args[0] && !message.options?.getString('wikepedia')) return message.reply('Digite o que quer pesquisar no wikipedia')
+        if(!message.options?.getString('wikipedia')) return message.reply('Digite o que quer pesquisar no wikipedia')
         try {
         let msg = await message.reply({content: 'Procurando....', fetchReply: true})
-        let sig = await dic.wikipedia(!args[0] ? message.options.getString('wikepedia'):args.join(" "))
+        let sig = await dic.wikipedia(message.options.getString('wikipedia'))
         let dis = Object?.keys(message.member.presence?.clientStatus)[0] || 'Nenhuma plataforma'
         const embed = new MessageEmbed()
         .setTitle(`${sig.title}`)

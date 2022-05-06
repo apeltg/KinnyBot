@@ -13,7 +13,7 @@ module.exports =  {
     },
     run: async(client, message, args) => {
         let id = !message.isCommand ? args[0]:message.options?.getString('usuario')
-        let user = message.mentions?.users.first() || client.users.cache.get(!id ? !message.author ? message.user.id:message.author.id:id.replace(/[<@!>]/g, '')) || await client.users.fetch(!id ? !message.author ? message.user.id:message.author.id:id.replace(/[<@!>]/g, ''));
+        let user = message.mentions?.users.first() || client.users.cache.get(!id ? message.user.id:id.replace(/[<@!>]/g, '')) || await client.users.fetch(!id ? message.user.id:id.replace(/[<@!>]/g, ''));
         let banner = await client.api.users(user.id).get()
         if(!banner.banner && !banner.banner_color) return message.reply('Essa pessoa não possui uma banner!')
         if(!banner.banner && banner.banner_color) {

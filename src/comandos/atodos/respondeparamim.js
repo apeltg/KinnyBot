@@ -14,12 +14,12 @@ module.exports = {
     },
     run: async (client, message, args) => {
         let perguntas = ['informatica', 'dever de casa', 'outros']
-        let pergunta = args?.join(" ") || message.options?.getString('responde')
+        let pergunta = message.options?.getString('responde')
         if(!pergunta) return message.reply('Digite a pergunta')
         let per = await db.res.findOne({pergunta: `${pergunta.replace('?', '')}?`})
         let per2 = await db.res.find()
         if(!per) {
-            let ca = message.channel.createMessageCollector({ filter: ({ author }) => author.id === (!message.author ? message.user.id : message.author.id), time: 15000})
+            let ca = message.channel.createMessageCollector({ filter: ({ author }) => author.id === (message.user.id), time: 15000})
             message.reply(`Eu não achei essa pergunta! Você poderia digitar a categoria dessa pergunta? Categorias: \`informatica, dever de casa, outros\` \nVeja a lista de perguntas quem saiba queira responder: \`${per2?.map(x => x.pergunta).join(', ') || "Sem perguntas"}\` (Digite cancelar caso não queira alguma pergunta)`)
             ca.on('collect', async ca => {
                 if(ca.content.toLowerCase() == 'cancelar') {
@@ -27,7 +27,7 @@ module.exports = {
                     return ca.stop()
                 }
                 if(!perguntas.some(x => ca.content.normalize("NFD").includes(x))) return message.reply('Essa não é uma categoria valida!')
-                await db.res.create({pergunta: `${pergunta.replace('?', '')}?`, categoria: ca.content, especialistas: false, respostas: [], autor: !message.author ? message.user.id:!message.author ? message.user.id:message.author.id, perguntatolower: `${pergunta.toLowerCase().replace('?', '')}?`})
+                await db.res.create({pergunta: `${pergunta.replace('?', '')}?`, categoria: ca.content, especialistas: false, respostas: [], autor: !message.user ? message.user.id:message.user.id, perguntatolower: `${pergunta.toLowerCase().replace('?', '')}?`})
                 message.reply('Resposta salva! Irei ir no seu dm caso alguem responda sua pergunta!')
             })
             return

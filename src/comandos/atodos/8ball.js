@@ -10,8 +10,8 @@ module.exports = {
             required: true,
         }],
     },
-    run: async(client, message, args) => {
-        let pergunta =  args?.join(' ') || message.options?.getString('8ball')
+    run: async(client, message) => {
+        let pergunta =  message.options?.getString('8ball')
         if(!pergunta) return message.reply('Digite sua pergunta')
         let frases = [
             "Provavelmente",

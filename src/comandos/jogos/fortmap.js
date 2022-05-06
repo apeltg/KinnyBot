@@ -9,7 +9,7 @@ module.exports = {
     run: async(client, message, args) => {
          
         axios.get(`https://fortnite-api.com/v1/map`).then(async response => {
-            const lan = await db.lgs.findOne({guildID: message.guild.id})
+            const lan = await db.lgs.findOne({guildID: message.user.id})
             let img = response.data.data.images.blank
             if(!lan) {
             const embed = new MessageEmbed()

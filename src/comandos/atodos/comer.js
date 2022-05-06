@@ -7,10 +7,10 @@ module.exports = {
         aliases: ['comida', 'fat']
     },
     run: async(client, message) => {
-        let priv = await db.consu.findOne({consumidor: !message.author ? message.user.id:message.author.id})
+        let priv = await db.consu.findOne({consumidor: message.user.id})
         if(!priv) return message.reply('Compre uma colher antes!')
         if(!priv.produtos.includes("colher")) return message.reply('Compre uma colher antes!')
-        message.reply('😲 \n \n \n \n 🍗 ').then(editar => {
+        message.reply({content: '😲 \n \n \n \n 🍗 ', fetchReply: true}).then(editar => {
             setTimeout(() => {
                 editar.edit('⠀ \n😲 \n \n \n 🍗 ')
             }, 2000)

@@ -8,7 +8,7 @@ module.exports = {
     },
     run: async(client, message) => {
         let users = await db.reps.find()
-        let lan = await db.lgs.findOne({guildID: message.guild.id})
+        let lan = await db.lgs.findOne({guildID: message.user.id})
         if(!lan) {
         users = users.sort((a, b) => b.reps - a.reps)
        let top = users.map((value, index) => `🎉 ${index + 1}° \`${client.users.cache.get(`${value.id}`)?.username || "Sem nome"}\` tem ${value.reps} reputações`)

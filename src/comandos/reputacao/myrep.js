@@ -17,8 +17,8 @@ module.exports = {
     ]
     },
     run: async(client, message) => {
-        let id = !message.isCommand ? args[0]:message.options?.getString('user')
-        let membro1 = message.mentions?.users.first() || client.users.cache.get(!id ? !message.author ? message.user.id:message.author.id:id.replace(/[<@!>]/g, '')) || await client.users.fetch(!id ? !message.author ? message.user.id:message.author.id:id.replace(/[<@!>]/g, ''));
+        let id = message.options?.getString('user')?.id
+        let membro1 = client.users.cache.get(!id ? message.user.id:id.replace(/[<@!>]/g, '')) || await client.users.fetch(!id ? message.user.id:id.replace(/[<@!>]/g, ''));
         const membro2 = await db.reps.findOne({id: membro1})
         if(!membro2) {
             const canvas = Canvas.createCanvas(1365, 400);

@@ -8,9 +8,9 @@ module.exports = {
     },
     run: async(client, message) => {
         const timeout = 6.048e+8
-        let premi = await db.premi.findOne({groupid: !message.author ? message.user.id:message.author.id})
+        let premi = await db.premi.findOne({groupid: message.user.id})
         if (!premi) return message.reply(`${client.user.username} - Erro \n Esse comando é para pessoas que possui o Kinny Premium. Quer ter desbloqueado? Compre o kinny premium!`)
-        let member = await db.coins.findOne({id: !message.author ? message.user.id:message.author.id})
+        let member = await db.coins.findOne({id: message.user.id})
         if(member.coinsc <= 0) return message.reply('Você não tem koins!')
         if (member.multidown + timeout > Date.now()) {
             let infh = parseMilliseconds(timeout - (Date.now() - member.multidown));
@@ -21,11 +21,11 @@ module.exports = {
         } else {
             if (!member) return message.reply('Você não tem 1 conta!')
             const grana = Math.floor(Math.random() * 50);
-            await db.coins.findOneAndUpdate({id: !message.author ? message.user.id:message.author.id}, {multidown: Date.now()})
+            await db.coins.findOneAndUpdate({id: message.user.id}, {multidown: Date.now()})
             const embed = new MessageEmbed()
                 .setColor('#9900f8')
                 .addField(`${client.user.username} - Diversão`, `Seus koins foi multiplicado por ${grana}!`)
-            await db.coins.findOneAndUpdate({id: !message.author ? message.user.id:message.author.id}, {coinsc: member.coinsc * grana, multidown: Date.now()})
+            await db.coins.findOneAndUpdate({id: message.user.id}, {coinsc: member.coinsc * grana, multidown: Date.now()})
             message.reply({embeds: [embed]})
         }
     }

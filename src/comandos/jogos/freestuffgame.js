@@ -1,7 +1,6 @@
 const { MessageEmbed } = require('discord.js')
 const { getGames } = require("epic-free-games");
 const moment = require('moment')
-const axios = require('axios')
 const db = require('../../../db.js')
 module.exports = {
     config: {
@@ -9,8 +8,7 @@ module.exports = {
         cooldown: 10
     },
     run: async(client, message, args) => {
-        if(message.isCommand()) return message.reply('Esse comando não funciona com slash commands!')
-        let lan = await db.lgs.findOne({guildID: message.guild.id})
+        let lan = await db.lgs.findOne({guildID: message.user.id})
         let pag = args[0]
         lan && lan.lang === 'en' ? moment.locale('en'):moment.locale('pt-br')
         getGames(lan && lan.lang === 'en' ? "US":"BR").then(async res => {
@@ -25,7 +23,7 @@ module.exports = {
             .setImage(url)
             .setTitle(`${client.user.username} - ${lan && lan.lang === 'en' ? "Games free":"Jogos gratis"}`)
             .setDescription(lan && lan.lang === 'en' ? stren:strpt)
-            .setFooter(res.currents.length - 1 === 0 ? "":`Existe +${res.currents.length - 1} jogo free! Caso queira acessar esse jogo digite freestuffgame ${res.currents.length} \nAtenção! Não confie na data de expiramento! Entre no site da epic games e veja a data de expiração!`)
+            .setFooter({text: res.currents.length - 1 === 0 ? "":`Existe +${res.currents.length - 1} jogo free! Caso queira acessar esse jogo digite freestuffgame ${res.currents.length} \nAtenção! Não confie na data de expiramento! Entre no site da epic games e veja a data de expiração!`})
             await message.reply({embeds: [embed]})
 
           }).catch(err => {

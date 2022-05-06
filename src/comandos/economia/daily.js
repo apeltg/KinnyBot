@@ -8,8 +8,8 @@ module.exports = {
     },
     run: async(client, message) => {
         const grana = Math.floor(Math.random() * 500);
-        let achar = await db.coins.findOne({id: !message.author ? message.user.id:message.author.id})
-        const lan = await db.lgs.findOne({guildID: !message.author ? message.user.id:message.author.id})
+        let achar = await db.coins.findOne({id: message.user.id})
+        const lan = await db.lgs.findOne({guildID: message.user.id})
         const timeout = 8.64e+7
         if(!lan) {
         if (!achar) {
@@ -17,7 +17,7 @@ module.exports = {
                 .setColor('#9900f8')
                 .addField(`${client.user.username} - Diversão`, `Você jogou no daily e ganhou ${grana} Koins!`)
             await db.coins.create({
-                id: !message.author ? message.user.id:message.author.id,
+                id: message.user.id,
                 coinsc: grana,
                 coinsb: 0,
                 dailyCooldown: Date.now()
@@ -31,7 +31,7 @@ module.exports = {
                     .addField(`${client.user.username} - Diversão`, `Você ja usou o daily! Tente novamente daqui **${infh.hours} horas ${infh.minutes} minutos ${infh.seconds} segundos!**`)
                 message.reply({embeds: [embed]})
             } else {
-                await db.coins.updateOne({id: !message.author ? message.user.id:message.author.id}, {dailyCooldown: Date.now()})
+                await db.coins.updateOne({id: message.user.id}, {dailyCooldown: Date.now()})
                 let soma = Number(achar.coinsc + grana)
                 const embed = new MessageEmbed()
                     .setColor('#9900f8')
@@ -48,7 +48,7 @@ module.exports = {
                     .setColor('#9900f8')
                     .addField(`${client.user.username} - Fun`, `You played daily and won ${grana} Koins!`)
                 await db.coins.create({
-                    id: !message.author ? message.user.id:message.author.id,
+                    id: message.user.id,
                     coinsc: grana,
                     coinsb: 0,
                     dailyCooldown: Date.now()
@@ -62,7 +62,7 @@ module.exports = {
                         .addField(`${client.user.username} - Fun`, `You already used daily! Try again from here **${infh.hours} hours ${infh.minutes} minutes ${infh.seconds} seconds!**`)
                     message.reply({embeds: [embed]})
                 } else {
-                    await db.coins.updateOne({id: !message.author ? message.user.id:message.author.id}, {dailyCooldown: Date.now()})
+                    await db.coins.updateOne({id: message.user.id}, {dailyCooldown: Date.now()})
                     let soma = Number(achar.coinsc + grana)
                     const embed = new MessageEmbed()
                         .setColor('#9900f8')

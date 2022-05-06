@@ -13,8 +13,8 @@ module.exports = {
       }],
     },
     run: async(client, message, args) => {
-      const lan = await db.lgs.findOne({guildID: !message.author ? message.user.id:!message.author ? message.user.id:message.author.id})
-    let ip = args?.join(' ') || message.options?.getString('ip')
+      const lan = await db.lgs.findOne({guildID: !message.user ? message.user.id:message.user.id})
+    let ip = message.options?.getString('ip')
     if(!ip) return message.reply(`${client.user.username} - Erro \n Digite o ip!`)
   axios.get(`http://ip-api.com/json/${ip.replaceAll('https://', '').replaceAll('http://', '').replaceAll('/').split(':')[0].replace('undefined', '').replace(undefined, '')}?lang=${lan && lan.lang === 'en' ? "en":"pt-BR"}`).then(response => {
       let infoip = response.data

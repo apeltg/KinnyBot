@@ -1,5 +1,5 @@
 const db = require('../../../db.js')
-const { MessageEmbed } = require('discord.js')
+const { MessageEmbed, MessageButton, MessageActionRow } = require('discord.js')
 const moment = require('moment')
 module.exports = {
     config: {
@@ -17,15 +17,15 @@ module.exports = {
     run: async (client, message, args) => {
         moment.locale('pt-br')
         var termined = false
-        if (!args[0] && !message.options?.getString('tipo')) return message.reply('Digite como quer começar o sorteio (k.giveaway <criar> <reroll> <end>')
-        if (args[0]?.toLowerCase() === 'criar' || message.options?.getString('tipo').toLowerCase() === 'criar') {
-            let infogive = await db.give.findOne({guildID: message.guild.id})
-            if(infogive) return message.reply('Já existe sorteio rolando!')
+        if (!message.options?.getString('tipo')) return message.reply('Digite como quer começar o sorteio (k.giveaway <criar> <reroll> <end>')
+        if (message.options?.getString('tipo').toLowerCase() === 'criar') {
+            let infogive = await db.give.findOne({ guildID: message.guild.id })
+            if (infogive) return message.reply('Já existe sorteio rolando!')
             const perguntas = ['Digite o titulo do sorteio', 'Digite a descrição do sorteio', 'Vão ser quantos ganhadores? (Máximo 10 ganhadores)', 'Qual vai ser o tempo do sorteio (Exemplo: 5d 1h 2m (5 dias, 1 hora, 2 minutos))', 'Qual canal vai começar o sorteio?']
             const respostas = []
             let msg = !message.isCommand ? await message.channel.send(perguntas[0]) : await message.reply(perguntas[0])
             msg = !message.isCommand ? msg : await message.fetchReply()
-            let verificar = !message.author ? message.user.id : message.author.id
+            let verificar = message.user.id
             const collector = msg.channel.createMessageCollector({ filter: ({ author }) => author.id === verificar, max: perguntas.length })
 
             collector.on('collect', (result) => {
@@ -44,17 +44,17 @@ module.exports = {
                     }
                 }
                 if (message.isCommand) {
-                    if(respostas.length > 4) return collector.stop()
+                    if (respostas.length > 4) return collector.stop()
                     message.followUp(perguntas[respostas.length]).catch(error => console.log('Ocorreu erro 1' + error.message))
                 } else {
-                    if(respostas.length > 4) return collector.stop()
-                    msg.reply(perguntas[respostas.length]) .catch(error => console.log('Ocorreu erro 2' + error.message))
+                    if (respostas.length > 4) return collector.stop()
+                    msg.reply(perguntas[respostas.length]).catch(error => console.log('Ocorreu erro 2' + error.message))
                 }
             })
-            collector.on('end', async(collected, reason) => {
-                if(termined) return;
+            collector.on('end', async (collected, reason) => {
+                if (termined) return;
                 const channelid = message.guild.channels.cache.get(respostas[4].replace(/[<#>]/g, ''))
-                if(!channelid) {
+                if (!channelid) {
                     message.followUp('Esse canal não existe!')
                     return collector.stop()
                 }
@@ -63,78 +63,66 @@ module.exports = {
                     .setColor('#9900f8')
                     .setTitle(`${respostas[0]}`)
                     .setDescription(respostas[1] + `\n \n<:ts_relogio:836607879024082984> O sorteio vai se encerrar <t:${Math.round((Date.now() + tempo) / 1000)}:R>\nGanhadores: ${respostas[2]}`)
-                    .setFooter(`Reaja no 🎉 para entrar!`)
-                   let reagir = await channelid.send({embeds: [embed], fetchReply: true }).catch(error => console.log('Ocorreu erro a' + error.message))
-                    reagir.react('🎉').catch(error => console.log('Ocorreu erro b' + error.message))
-                    await db.give.create({
-                        guildID: message.guild.id,
-                        end: false,
-                        winners: respostas[2],
-                        channel: channelid.id,
-                        title: respostas[0],
-                        messageID: reagir.id
-                    })
-                    setTimeout(async () => {
-                        infogive = await db.give.findOne({guildID: message.guild.id})
-                        if(infogive.end) return;
-                        await db.give.findOneAndUpdate({guildID: message.guild.id}, {end: true})
-                        reagir = await (client.channels.cache.get(infogive.channel)).messages.fetch(reagir.id)
-                        var ganhador = reagir.reactions.cache.get('🎉').users.cache.map(x => x.id)
-                        ganhador = ganhador[Math.round(Math.random() * ganhador.length)]
-                        for(let i = 0; i < Number(respostas[2]); i++) {
-                            if(!ganhador) return message.reply('Não foi possivel decidir um ganhador!')
-                            message.guild.channels.cache.get(infogive.channel).send(`O ganhador do sorteio foi ${message.guild.members.cache.get(ganhador).toString()}`)
-                        }
-                        const embed = new MessageEmbed()
-                        .setColor('#9900f8')
-                        .setTitle(`${respostas[0]}`)
-                        .setDescription(`Sorteio encerrado! Vencedor anunciado embaixo! \n \nOBS: Caso o dono do sorteio não entregar o que prometeu denuncie para a o LMS5413!`)
-                        .setFooter(`Sorteio encerrado!`)
-                          reagir.edit({embeds: [embed]})
-                        setTimeout(async() => {
-                            reagir.reactions.removeAll()
-                            await db.give.findOneAndRemove({guildID: message.guild.id})
-                        }, 300000)
-                    }, tempo)
+                const row = new MessageActionRow()
+                    .addComponents(
+                        new MessageButton()
+                            .setCustomId('giveaway-enter')
+                            .setLabel('Clique aqui para entrar')
+                            .setEmoji("825481371891662939")
+                            .setStyle('SUCCESS'),
+                    );
+                let reagir = await channelid.send({ embeds: [embed], components: [row], fetchReply: true }).catch(error => console.log('Ocorreu erro a' + error.message))
+                await db.give.create({
+                    guildID: message.guild.id,
+                    end: false,
+                    winners: respostas[2],
+                    channel: channelid.id,
+                    title: respostas[0],
+                    messageID: reagir.id,
+                    participants: [],
+                    timestamp: Date.now() + tempo,
+                })
             })
-        } else if(args[0]?.toLowerCase() === 'reroll' || message.options?.getString('tipo').toLowerCase() === 'reroll') {
-            infogive = await db.give.findOne({guildID: message.guild.id})
-            if(!infogive) return message.reply('Não existe nenhum sorteio para ser listado')
-            reagir = await (client.channels.cache.get(infogive.channel)).messages.fetch(reagir.id)
-            if(!reagir) return message.reply('Você deletou a mensagem do sorteio!')
-            if(!infogive.end) return message.reply('O sorteio atual não acabou!')
-            ganhador = reagir.reactions.cache.get('🎉').users.cache.map(x => x.id)
-            console.log(ganhador)
+        } else if (message.options?.getString('tipo').toLowerCase() === 'reroll') {
+            infogive = await db.give.findOne({ guildID: message.guild.id })
+            if (!infogive) return message.reply('Não existe nenhum sorteio para ser listado')
+            reagir = await (client.channels.cache.get(infogive.channel)).messages.fetch(infogive.messageID)
+            if (!reagir) return message.reply('Você deletou a mensagem do sorteio!')
+            if (!infogive.end) return message.reply('O sorteio atual não acabou!')
+            ganhador = infogive.participants
             ganhador = ganhador[Math.round(Math.random() * ganhador.length)]
-            for(let i = 0; i < infogive.winners; i++) {
-                if(!ganhador) return message.guild.channels.cache.get(infogive.channel).send('Não foi possivel decidir um ganhador!')
+            message.reply("Decidi um novo ganhador! O ganhador foi anunciado no canal de sorteio")
+            for (let i = 0; i < infogive.winners; i++) {
+                if (!ganhador) return message.guild.channels.cache.get(infogive.channel).send('Não foi possivel decidir um ganhador!')
                 message.guild.channels.cache.get(infogive.channel).send(`O ganhador do sorteio foi ${message.guild.members.cache.get(ganhador).toString()}`)
             }
 
-        } else if(args[0]?.toLowerCase() === 'end' || message.options?.getString('tipo').toLowerCase() === 'end') {
-            infogive = await db.give.findOne({guildID: message.guild.id})
-            if(!infogive) return message.reply('Não existe nenhum sorteio para ser listado')
-            reagir = client.channels.cache.get(infogive.channel).messages.cache.get(infogive.messageID)
-            if(!reagir) return message.reply('Você deletou a mensagem do sorteio!')
-            if(infogive.end) return message.reply('O sorteio já se encerrou!')
-            await db.give.findOneAndUpdate({guildID: message.guild.id}, {end: true})
-            ganhador = reagir.reactions.cache.get('🎉').users.cache.map(x => x.id)
-            console.log(ganhador)
+        } else if (message.options?.getString('tipo').toLowerCase() === 'end') {
+            infogive = await db.give.findOne({ guildID: message.guild.id })
+            if (!infogive) return message.reply('Não existe nenhum sorteio para ser listado')
+            reagir = await client.channels.cache.get(infogive.channel).messages.fetch(infogive.messageID).catch(e => {
+                if(e.message === 'Unknown Message') return;
+                console.log(e.message)
+            })
+            if (!reagir) return message.reply('Você deletou a mensagem do sorteio!')
+            if (infogive.end) return message.reply('O sorteio já se encerrou!')
+            await db.give.findOneAndUpdate({ guildID: message.guild.id }, { end: true })
+            ganhador = infogive.participants
             ganhador = ganhador[Math.round(Math.random() * ganhador.length)]
-            for(let i = 0; i < infogive.winners; i++) {
-                if(!ganhador) return message.guild.channels.cache.get(infogive.channel).send('Não foi possivel decidir um ganhador!')
-                message.reply(`O ganhador do sorteio foi ${message.guild.members.cache.get(ganhador).toString()}`)
+            message.reply("Encerrei o sorteio! Vencedor anunciado no canal que foi criado o sorteio")
+            for (let i = 0; i < infogive.winners; i++) {
+                if (!ganhador) return message.guild.channels.cache.get(infogive.channel).send('Não foi possivel decidir um ganhador!')
+                message.guild.channels.cache.get(infogive.channel).send(`O ganhador do sorteio foi ${message.guild.members.cache.get(ganhador).toString()}`)
             }
-            setTimeout(async() => {
-                reagir.reactions.removeAll()
-                await db.give.findOneAndRemove({guildID: message.guild.id})
+            setTimeout(async () => {
+                await db.give.findOneAndRemove({ guildID: message.guild.id })
             }, 300000)
             const embed = new MessageEmbed()
-            .setColor('#9900f8')
-            .setTitle(`${infogive.title}`)
-            .setDescription(`Sorteio encerrado! Vencedor anunciado embaixo! \n \nOBS: Caso o dono do sorteio não entregar o que prometeu denuncie para a o LMS5413!`)
-            .setFooter(`Sorteio encerrado!`)
-              reagir.edit({embeds: [embed]})
+                .setColor('#9900f8')
+                .setTitle(`${infogive.title}`)
+                .setDescription(`Sorteio encerrado! Vencedor anunciado embaixo! \n \nOBS: Caso o dono do sorteio não entregar o que prometeu denuncie para a o LMS5413!`)
+                .setFooter({text:`Sorteio encerrado!`})
+            reagir.edit({ embeds: [embed] })
         }
     }
 }

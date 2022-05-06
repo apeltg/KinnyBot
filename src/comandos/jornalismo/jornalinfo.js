@@ -5,12 +5,20 @@ const embed = new MessageEmbed()
 module.exports = {
     config: {
         nome: 'jornalinfo',
+        options: [
+            {
+                name: 'nome',
+                type: 'STRING',
+                required: true,
+                description: 'Nome do jornal'
+            }
+        ],
         cooldown: 8
     },
     run: async(client, message, args ) => {
-        const lan = await db.lgs.findOne({guildID: !message.author ? message.user.id:message.author.id})
-        if(!args[0]) return message.reply(lan && lan.lang === 'en' ? langs.en.noName:langs.pt.noName)
-        const jor = await db.empr.findOne({nametolower: args[0].toLowerCase()})
+        const lan = await db.lgs.findOne({guildID: message.user.id})
+        if(!message.options.getString('nome')) return message.reply(lan && lan.lang === 'en' ? langs.en.noName:langs.pt.noName)
+        const jor = await db.empr.findOne({nametolower: message.options.getString('nome').toLowerCase()})
         if(!jor) return message.reply(lan && lan.lang === 'en' ? langs.en.naoexistente:langs.pt.naoexistente)
         const embed = new MessageEmbed()
         .setColor('#9900f8')

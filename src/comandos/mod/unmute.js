@@ -13,7 +13,7 @@ module.exports = {
     ]
     },
     run: async(client, message, args) => {
-        let member = message.mentions?.members.first() || message.guild.members.cache.get(!args[0] ? message.options?.getUser('user').id:args[0])
+        let member = message.guild.members.cache.get(message.options?.getUser('user').id)
         if (!message.member.permissions.has("MUTE_MEMBERS")) return message.reply(`${client.user.username} - Erro \n Você tem que ter a permissão \`Mutar membros!\``)
         if(!message.guild.me.permissions.has('MANAGE_ROLES')) return message.reply(`${client.user.username} - Erro \n<a:alerta:806274799638282311> Eu não tenho permissao \`Mutar membros!\``)
 

@@ -14,10 +14,10 @@ module.exports = {
         }],
     },
     run: async(client, message, args) => {
-        if(!args[0] && !message.options?.getString('dicionario')) return message.reply('Digite o que quer pesquisar no dicionário!')
+        if(!message.options?.getString('dicionario')) return message.reply('Digite o que quer pesquisar no dicionário!')
         let msg = await message.reply({content: 'Procurando....', fetchReply: true})
         try {
-        let sig = await dic.significado(!args[0] ? message.options.getString('dicionario'):args.join(" "))
+        let sig = await dic.significado(message.options.getString('dicionario'))
         if(!sig.class.length) return msg.edit('Não consegui achar o que você procura!')
         const embed = new MessageEmbed()
         .setTitle(`${client.user.username} | Dicionário`)

@@ -2,10 +2,17 @@ const db = require("../../../db");
 module.exports = {
     config: {
         nome: 'setcanaldebemvindo',
-        cooldown: 10
+        cooldown: 10,
+        options: [
+            {
+                name: 'lang',
+                type: 'STRING',
+                required: true,
+                description: 'Você deseja ativar ou desativar o canal de bem vindo?'
+            }
+        ]
     },
     run: async (client, message, args) => {
-        if(message.isCommand) return message.channel.send('Esse comando não funciona com slash commands!')
         if (!message.member.permissions.has('MANAGE_GUILD')) return message.reply(`${client.user.username} - Erro \n Você não essa permissao \`Gerenciar Servidores\``)
 
         let gerenciador = await db.idgr.findOne({ group: message.guild.id })
@@ -13,7 +20,7 @@ module.exports = {
             await db.idgr.create({ group: message.guild.id, enabled: false })
             return message.reply('Digite o comando denovo para poder terminar as configurações!')
         }
-        if (args.join(" ").toLowerCase() === 'desativar') {
+        if (message.options.getString('lang').toLowerCase() === 'desativar') {
             await db.idgr.findOneAndUpdate({ group: message.guild.id }, { enabled: false })
             return message.reply('Configurações de bem vindo, auto role e saida desablitadas com sucesso!')
         }
@@ -28,7 +35,7 @@ module.exports = {
                 await db.idgr.findOneAndUpdate({ group: message.guild.id }, { channelwele: canal.id })
                 message.reply('Canal de bem vindo setado')
             }
-            let verificar = !message.author ? message.user.id : message.author.id
+            let verificar = message.user.id
             let chl = message.channel.createMessageCollector({ filter: ({ author }) => author.id === verificar, time: 15000 })
             message.reply('Mencione o canal que receberá a mensagem de saida! (Digite "Pular" caso não queira  a mensagem)')
             chl.on('collect', async saida => {

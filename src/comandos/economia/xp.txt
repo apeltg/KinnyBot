@@ -12,7 +12,7 @@ module.exports = {
         }],
     },
     run: async(client, message, args) => {
-        const lan = await db.lgs.findOne({guildID: !message.author ? message.user.id:message.author.id})
+        const lan = await db.lgs.findOne({guildID: message.user.id})
         let members = message.mentions?.users.first() || client.users.fetch(!args[0] ? message.options?.getString('user').replace(/[<@!>]/g, ''):args[0])
        let xp = await db.xps.findOne({userID: members.id})
         if(xp) {

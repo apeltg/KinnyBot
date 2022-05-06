@@ -6,7 +6,7 @@ module.exports = {
         cooldown: 10
     },
     run: async(client, message) => {
-        const lan = await db.lgs.findOne({guildID: !message.author ? message.user.id:message.author.id})
+        const lan = await db.lgs.findOne({guildID: message.user.id})
             let users = await db.xps.find()
             users = users.sort((a, b) => b.xp - a.xp)
             if(!lan) {

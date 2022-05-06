@@ -11,7 +11,7 @@ module.exports =  {
         }],
     },
     run: async(client, message, args) => {
-        let avata = client.guilds.cache.get(!args[0] && message.isCommand ? message.options.getString('guild'):args[0]) || message.guild
+        let avata = client.guilds.cache.get(message.options?.getString('guild')) || message.guild
         const embed = new MessageEmbed()
             .setColor('#9900f8')
             .setTitle(`${client.user.username} - Diversão`)

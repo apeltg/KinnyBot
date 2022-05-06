@@ -2,14 +2,31 @@ const db = require("../../../db");
 module.exports = {
     config: {
         nome: 'cap',
-        cooldown: 10
+        cooldown: 10,
+        options: [
+            {
+                name: "ativar",
+                type: "STRING",
+                required: true,
+                description: "Digite se deseja ativar ou desativar",
+                choices: [
+                    {
+                        name: "ativar",
+                        value: "ativar"
+                    },
+                    {
+                        name: "desativar",
+                        value: "desativar"
+                    }
+                ]
+            }
+        ]
     },
     run: async(client, message, args) => {
-        let prem = await db.premi.findOne({groupid: !message.author ? message.user.id:message.author.id})
+        let prem = await db.premi.findOne({groupid: message.user.id})
         if (!prem) return message.reply(`${client.user.username} - Erro \n Esse comando é para pessoas que possui o Kinny Premium. Quer ter desbloqueado? Compre o kinny premium!`)
-if(!message.member.permissions.has('ADMINISTRATOR')) return message.reply(`${client.user.username} - Erro \n Você tem que ter a permissão \`administrador\``)
-        let ativar = args.join(" ")
-        if (!ativar) return message.reply(`${client.user.username} - Erro \n Use: k.cap <ativar> <desativar>`)
+        if(!message.member.permissions.has('ADMINISTRATOR')) return message.reply(`${client.user.username} - Erro \n Você tem que ter a permissão \`administrador\``)
+        let ativar = message.options.getString("ativar").toLowerCase()
         let proc = await db.cap.findOne({groupid: message.guild.id})
         if (!proc) {
             if (`${ativar}` === "desativar") {
@@ -19,7 +36,7 @@ if(!message.member.permissions.has('ADMINISTRATOR')) return message.reply(`${cli
                     groupid: message.guild.id,
                     capactivy: "ativado"
                 })
-                var ip1 = message.channel.createMessageCollector({filter, time: 15000})
+                var ip1 = message.channel.createMessageCollector({filter: m => m.author.id === message.user.id, time: 15000})
                 message.reply('Digite o id da role que será dado ao cumprir o captcha')
                 ip1.on('collect', async ip => {
                     let cap = ip.content

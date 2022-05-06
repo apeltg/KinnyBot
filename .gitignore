@@ -3,3 +3,4 @@ node_modules
 config.json
 KinnyBot.zip
 db.js
+/src/comandos/economia/xp.txt

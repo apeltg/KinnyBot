@@ -13,9 +13,9 @@ module.exports = {
     },
     run: async(client, message, args) => {
     (async () => {
-        let pesquisa = args?.join(' ') || message.options?.getString('npm')
+        let pesquisa = message.options?.getString('npm')
         if(!pesquisa) return message.reply('Bola de cristal: undefined')
-        let lan = await db.lgs.findOne({guildID: !message.author ? message.user.id:!message.author ? message.user.id:message.author.id})
+        let lan = await db.lgs.findOne({guildID: message.user.id})
         const results = await searchNpmRegistry()
             .text(`${pesquisa}`)
             .size(5)

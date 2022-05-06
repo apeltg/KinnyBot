@@ -16,8 +16,8 @@ module.exports = {
         }],
     },
     run: async(client, message, args) => {
-        let id = !message.isCommand ? args[0]:message.options?.getString('usuario')
-        let mencao = message.mentions?.users.first() || client.users.cache.get(!id ? !message.author ? message.user.id:message.author.id:id.replace(/[<@!>]/g, '')) || await client.users.fetch(!id ? !message.author ? message.user.id:message.author.id:id.replace(/[<@!>]/g, ''));
+        let id = message.options?.getString('usuario')
+        let mencao = client.users.cache.get(!id ? message.user.id:id.replace(/[<@!>]/g, '')) || await client.users.fetch(!id ? message.user.id:id.replace(/[<@!>]/g, ''));
         let achar = await db.coins.findOne({id: mencao.id})
         if (!achar) {
             message.reply(`${client.user.username} - Diversão \n Você não tem dinheiro :(. Jogue no daily e ganhe um dinheirinho!`)

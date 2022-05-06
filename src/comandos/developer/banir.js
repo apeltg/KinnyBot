@@ -7,7 +7,7 @@ module.exports = {
     run: async(client, message, args) => {
         let motivo1 = args.slice(1).join(" ")
         let gp = message.mentions.members.first(1)[0]
-        if((!message.author ? message.user.id:message.author.id) !== '425775842371829760') {
+        if((message.author.id) !== require('../../../config.json').creatorid) {
             message.reply({content: 'Apenas meu desenvolvedor pode executar esse comando!'})
         } else {
             let procm =  await db.ban.findOne({punid: gp})

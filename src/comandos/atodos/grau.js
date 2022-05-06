@@ -1,14 +1,32 @@
 module.exports = {
     config: {
         nome: "grau",
-        cooldown: 9
+        cooldown: 9,
+        options: [
+            {
+                name: "escolha",
+                type: "STRING",
+                description: "Escolha uma das opções abaixo",
+                required: true,
+                choices: [
+                    {
+                        name: "Moto",
+                        value: "moto"
+                    },
+                    {
+                        name: "Bike",
+                        value: "bike"
+                    }
+                ]
+            }
+        ]
     },
     run: async(client, message, args) => {
-        const escolha = args.join(" ").toLowerCase()
+        const escolha = message.options.getString('escolha').toLowerCase()
         if(!escolha) return message.reply('Use grau <moto/bike>')
         if(!['bike', 'moto'].includes(escolha)) return message.reply('Isso não está na lista! use: grau <moto/bike>')
         if(escolha === 'bike') {
-            message.reply('<:bike_andando:816293573322211358>').then(editar => {
+            message.reply({content: '<:bike_andando:816293573322211358>', fetchReply: true}).then(editar => {
                 setTimeout(() => {
                     editar.edit('⠀⠀<:bike_andando:816293573322211358>')
                 }, 2000)

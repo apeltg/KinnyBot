@@ -8,7 +8,7 @@ module.exports = {
     },
     run: async(client, message) => {
         let servidor = message.guild 
-        const lan = await db.lgs.findOne({guildID: !message.author ? message.user.id:message.author.id})
+        const lan = await db.lgs.findOne({guildID: message.user.id})
 let nome = servidor.name
         let id = servidor.id
         let icone = !servidor.iconURL({dynamic: true}) ? "https://c.files.bbci.co.uk/12A9B/production/_111434467_gettyimages-1143489763.jpg":servidor.iconURL({dynamic: true})
@@ -23,7 +23,7 @@ let nome = servidor.name
         let offline = servidor.members.cache.filter(a => a.presence?.status === "offline").size
         let canaistext = servidor.channels.cache.filter(c => c.type === "GUILD_TEXT").size
         let canaisvoice = servidor.channels.cache.filter(c => c.type === "GUILD_VOICE").size
-        let total = servidor.channels.cache.size
+        let total = servidor.channels.cache.filter(x => x.type !== 'GUILD_CATEGORY').size
         let criado = moment(servidor.createdAt).format('LLL')
         if(!lan) {
        moment.locale('pt-br')

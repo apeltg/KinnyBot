@@ -15,10 +15,10 @@ module.exports = {
     },
     run: async (client, message, args) => {
         let array = ['computador', 'sapato', 'privada', 'colher']
-        let account = await db.coins.findOne({id: !message.author ? message.user.id:message.author.id})
-        let caixa = await db.consu.findOne({consumidor: !message.author ? message.user.id:message.author.id})
-        let prod = args?.join(" ").toLowerCase() || message.options?.getString('produtos').toLowerCase()
-        const lan = await db.lgs.findOne({guildID: !message.author ? message.user.id:message.author.id})
+        let account = await db.coins.findOne({id: message.user.id})
+        let caixa = await db.consu.findOne({consumidor: message.user.id})
+        let prod = message.options.getString('produtos').toLowerCase()
+        const lan = await db.lgs.findOne({guildID: message.user.id})
         if(!lan) {
         if(!account) return message.reply(`${client.user.username} - Erro \nVocê não tem conta`)
         if(!prod) {
@@ -47,10 +47,10 @@ module.exports = {
                 .setDescription("🖥️ Você comprou um computador!")
             if (!caixa) {
                 await db.consu.create({
-                    consumidor: !message.author ? message.user.id:message.author.id,
+                    consumidor: message.user.id,
                     produtos: prod
                 })
-                await db.coins.findOneAndUpdate({id: !message.author ? message.user.id:message.author.id}, {coinsc: account.coinsc - 150})
+                await db.coins.findOneAndUpdate({id: message.user.id}, {coinsc: account.coinsc - 150})
                 return message.reply({embeds: [embed]})
             } else {
                 if(caixa.produtos.includes("computador")) {
@@ -60,8 +60,8 @@ module.exports = {
                         .setColor('#9900f8')
                         .setTitle(`${client.user.username} - Diversão!`)
                         .setDescription("🖥️ Você comprou um computador!")
-                    await db.consu.findOneAndUpdate({consumidor: !message.author ? message.user.id:message.author.id}, {$push: {produtos: prod}})
-                    await db.coins.findOneAndUpdate({id: !message.author ? message.user.id:message.author.id}, {coinsc: account.coinsc - 150})
+                    await db.consu.findOneAndUpdate({consumidor: message.user.id}, {$push: {produtos: prod}})
+                    await db.coins.findOneAndUpdate({id: message.user.id}, {coinsc: account.coinsc - 150})
                     return message.reply({embeds: [embed]})
                 }
             }
@@ -75,10 +75,10 @@ module.exports = {
                 .setDescription("🥄 Você comprou uma colher")
             if (!caixa) {
                 await db.consu.create({
-                    consumidor: !message.author ? message.user.id:message.author.id,
+                    consumidor: message.user.id,
                     produtos: prod
                 })
-                await db.coins.findOneAndUpdate({id: !message.author ? message.user.id:message.author.id}, {coinsc: account.coinsc - 30})
+                await db.coins.findOneAndUpdate({id: message.user.id}, {coinsc: account.coinsc - 30})
                 return message.reply({embeds: [embed]})
             } else {
                 if(caixa.produtos.includes("colher")) {
@@ -88,8 +88,8 @@ module.exports = {
                         .setColor('#9900f8')
                         .setTitle(`${client.user.username} - Diversão!`)
                         .setDescription("🥄 Você comprou um colher")
-                    await db.coins.findOneAndUpdate({id: !message.author ? message.user.id:message.author.id}, {coinsc: account.coinsc - 30})
-                    await db.consu.findOneAndUpdate({consumidor: !message.author ? message.user.id:message.author.id}, {$push: {produtos: prod}})
+                    await db.coins.findOneAndUpdate({id: message.user.id}, {coinsc: account.coinsc - 30})
+                    await db.consu.findOneAndUpdate({consumidor: message.user.id}, {$push: {produtos: prod}})
                     return message.reply({embeds: [embed]})
                 }
             }
@@ -103,10 +103,10 @@ module.exports = {
                 .setDescription("🚽 Você comprou uma privada")
             if (!caixa) {
                 await db.consu.create({
-                    consumidor: !message.author ? message.user.id:message.author.id,
+                    consumidor: message.user.id,
                     produtos: prod
                 })
-                await db.coins.findOneAndUpdate({id: !message.author ? message.user.id:message.author.id}, {coinsc: account.coinsc - 200})
+                await db.coins.findOneAndUpdate({id: message.user.id}, {coinsc: account.coinsc - 200})
                 return message.reply({embeds: [embed]})
             } else {
                 if(caixa.produtos.includes("privada")) {
@@ -116,8 +116,8 @@ module.exports = {
                         .setColor('#9900f8')
                         .setTitle(`${client.user.username} - Diversão!`)
                         .setDescription("🚽 Você comprou um privada")
-                    await db.coins.findOneAndUpdate({id: !message.author ? message.user.id:message.author.id}, {coinsc: account.coinsc - 200})
-                    await db.consu.findOneAndUpdate({consumidor: !message.author ? message.user.id:message.author.id}, {$push: {produtos: prod}})
+                    await db.coins.findOneAndUpdate({id: message.user.id}, {coinsc: account.coinsc - 200})
+                    await db.consu.findOneAndUpdate({consumidor: message.user.id}, {$push: {produtos: prod}})
                     return message.reply({embeds: [embed]})
                 }
             }
@@ -131,10 +131,10 @@ module.exports = {
                 .setDescription("👟  Você comprou uma sapato")
             if (!caixa) {
                 await db.consu.create({
-                    consumidor: !message.author ? message.user.id:message.author.id,
+                    consumidor: message.user.id,
                     produtos: prod
                 })
-                await db.coins.findOneAndUpdate({id: !message.author ? message.user.id:message.author.id}, {coinsc: account.coinsc - 50})
+                await db.coins.findOneAndUpdate({id: message.user.id}, {coinsc: account.coinsc - 50})
                 return message.reply({embeds: [embed]})
             } else {
                 if(caixa.produtos.includes("sapato")) {
@@ -144,8 +144,8 @@ module.exports = {
                         .setColor('#9900f8')
                         .setTitle(`${client.user.username} - Diversão!`)
                         .setDescription("👟  Você comprou um sapato")
-                    await db.consu.findOneAndUpdate({consumidor: !message.author ? message.user.id:message.author.id}, {$push: {produtos: prod}})
-                    await db.coins.findOneAndUpdate({id: !message.author ? message.user.id:message.author.id}, {coinsc: account.coinsc - 50})
+                    await db.consu.findOneAndUpdate({consumidor: message.user.id}, {$push: {produtos: prod}})
+                    await db.coins.findOneAndUpdate({id: message.user.id}, {coinsc: account.coinsc - 50})
                     return message.reply({embeds: [embed]})
                 }
                 }
@@ -179,10 +179,10 @@ module.exports = {
                         .setDescription("🖥️ You bought a computer!")
                     if (!caixa) {
                         await db.consu.create({
-                            consumidor: !message.author ? message.user.id:message.author.id,
+                            consumidor: message.user.id,
                             produtos: prod
                         })
-                        await db.coins.findOneAndUpdate({id: !message.author ? message.user.id:message.author.id}, {coinsc: account.coinsc - 150})
+                        await db.coins.findOneAndUpdate({id: message.user.id}, {coinsc: account.coinsc - 150})
                         return message.reply({embeds: [embed]})
                     } else {
                         if(caixa.produtos.includes("computer")) {
@@ -192,8 +192,8 @@ module.exports = {
                                 .setColor('#9900f8')
                                 .setTitle(`${client.user.username} - Fun!`)
                                 .setDescription("🖥️ You bought a computer!")
-                            await db.consu.findOneAndUpdate({consumidor: !message.author ? message.user.id:message.author.id}, {$push: {produtos: prod}})
-                            await db.coins.findOneAndUpdate({id: !message.author ? message.user.id:message.author.id}, {coinsc: account.coinsc - 150})
+                            await db.consu.findOneAndUpdate({consumidor: message.user.id}, {$push: {produtos: prod}})
+                            await db.coins.findOneAndUpdate({id: message.user.id}, {coinsc: account.coinsc - 150})
                             return message.reply({embeds: [embed]})
                         }
                     }
@@ -207,10 +207,10 @@ module.exports = {
                         .setDescription("🥄 You bought a spoon")
                     if (!caixa) {
                         await db.consu.create({
-                            consumidor: !message.author ? message.user.id:message.author.id,
+                            consumidor: message.user.id,
                             produtos: prod
                         })
-                        await db.coins.findOneAndUpdate({id: !message.author ? message.user.id:message.author.id}, {coinsc: account.coinsc - 30})
+                        await db.coins.findOneAndUpdate({id: message.user.id}, {coinsc: account.coinsc - 30})
                         return message.reply({embeds: [embed]})
                     } else {
                         if(caixa.produtos.includes("To harvest")) {
@@ -220,8 +220,8 @@ module.exports = {
                                 .setColor('#9900f8')
                                 .setTitle(`${client.user.username} - Fun!`)
                                 .setDescription("🥄 You bought a spoon")
-                            await db.coins.findOneAndUpdate({id: !message.author ? message.user.id:message.author.id}, {coinsc: account.coinsc - 30})
-                            await db.consu.findOneAndUpdate({consumidor: !message.author ? message.user.id:message.author.id}, {$push: {produtos: prod}})
+                            await db.coins.findOneAndUpdate({id: message.user.id}, {coinsc: account.coinsc - 30})
+                            await db.consu.findOneAndUpdate({consumidor: message.user.id}, {$push: {produtos: prod}})
                             return message.reply({embeds: [embed]})
                         }
                     }
@@ -235,10 +235,10 @@ module.exports = {
                         .setDescription("🚽 You bought a toilet")
                     if (!caixa) {
                         await db.consu.create({
-                            consumidor: !message.author ? message.user.id:message.author.id,
+                            consumidor: message.user.id,
                             produtos: prod
                         })
-                        await db.coins.findOneAndUpdate({id: !message.author ? message.user.id:message.author.id}, {coinsc: account.coinsc - 200})
+                        await db.coins.findOneAndUpdate({id: message.user.id}, {coinsc: account.coinsc - 200})
                         return message.reply({embeds: [embed]})
                     } else {
                         if(caixa.produtos.includes("toilet")) {
@@ -248,8 +248,8 @@ module.exports = {
                                 .setColor('#9900f8')
                                 .setTitle(`${client.user.username} - Fun!`)
                                 .setDescription("🚽 You bought a toilet")
-                            await db.coins.findOneAndUpdate({id: !message.author ? message.user.id:message.author.id}, {coinsc: account.coinsc - 200})
-                            await db.consu.findOneAndUpdate({consumidor: !message.author ? message.user.id:message.author.id}, {$push: {produtos: prod}})
+                            await db.coins.findOneAndUpdate({id: message.user.id}, {coinsc: account.coinsc - 200})
+                            await db.consu.findOneAndUpdate({consumidor: message.user.id}, {$push: {produtos: prod}})
                             return message.reply({embeds: [embed]})
                         }
                     }
@@ -263,10 +263,10 @@ module.exports = {
                         .setDescription("👟  You bought a shoe")
                     if (!caixa) {
                         await db.consu.create({
-                            consumidor: !message.author ? message.user.id:message.author.id,
+                            consumidor: message.user.id,
                             produtos: prod
                         })
-                        await db.coins.findOneAndUpdate({id: !message.author ? message.user.id:message.author.id}, {coinsc: account.coinsc - 50})
+                        await db.coins.findOneAndUpdate({id: message.user.id}, {coinsc: account.coinsc - 50})
                         return message.reply({embeds: [embed]})
                     } else {
                         if(caixa.produtos.includes("shoe")) {
@@ -276,8 +276,8 @@ module.exports = {
                                 .setColor('#9900f8')
                                 .setTitle(`${client.user.username} - Fun!`)
                                 .setDescription("👟 You bought a shoe")
-                            await db.consu.findOneAndUpdate({consumidor: !message.author ? message.user.id:message.author.id}, {$push: {produtos: prod}})
-                            await db.coins.findOneAndUpdate({id: !message.author ? message.user.id:message.author.id}, {coinsc: account.coinsc - 50})
+                            await db.consu.findOneAndUpdate({consumidor: message.user.id}, {$push: {produtos: prod}})
+                            await db.coins.findOneAndUpdate({id: message.user.id}, {coinsc: account.coinsc - 50})
                             return message.reply({embeds: [embed]})
                         }
                         }

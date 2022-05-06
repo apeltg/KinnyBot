@@ -16,6 +16,6 @@ if(!message.guild.me.permissions.has('MANAGE_ROLES')) return message.reply(`${cl
         }).catch(e => {
             message.reply(`Ocorreu um erro interno ao tentar executar esse comando ${e}`)
         })
-        message.reply(`${client.user.username} - Sucesso \n Esse canal foi bloqueado por ${message.author}`)
+        message.reply(`${client.user.username} - Sucesso \n Esse canal foi bloqueado por ${message.user}`)
     }
 }

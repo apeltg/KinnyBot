@@ -7,8 +7,8 @@ module.exports = {
         cooldown: 10
     },
     run: async (client, message) => {
-        let proc = await db.coins.findOne({id: !message.author ? message.user.id:message.author.id})
-        const lan = await db.lgs.findOne({guildID: !message.author ? message.user.id:message.author.id})
+        let proc = await db.coins.findOne({id: message.user.id})
+        const lan = await db.lgs.findOne({guildID: message.user.id})
         if(!lan) {
         if (!proc) return message.reply(`${client.user.username} - Diversão \n Você não tem dinheiro :(. Jogue no daily e ganhe um dinheirinho!`)
             if(proc.coinsc <= 0) return message.reply(`${client.user.username} - Erro \n Você não tem dinheiro!`)

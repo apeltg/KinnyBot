@@ -1,7 +1,6 @@
 const fs = require('fs')
 const { MessageEmbed, MessageButton, MessageActionRow  } = require('discord.js')
 const db = require('../../../db')
-//const { MessageButton, MessageActionRow } = require('discord-buttons')
 module.exports = {
     config: {
         nome: 'ajuda',
@@ -9,10 +8,10 @@ module.exports = {
         aliases: ['help']
     },
     run: async (client, message) => {
-        const lan = await db.lgs.findOne({ guildID: !message.author ? message.user.id:!message.author ? message.user.id:message.author.id })
+        const lan = await db.lgs.findOne({ guildID: message.user.id })
         const comandos = fs.readdirSync('./src/comandos/atodos').filter(file => file.endsWith('.js'))
         const array = []
-        let user = !message.author ? message.user.id:message.author.id
+        let user = message.user.id
         for (let file of comandos) {
             array.push(file.split('.')[0])
         }
@@ -46,11 +45,9 @@ module.exports = {
         .setDescription(`> Reaja nos botões para cada comando (Possuo ${client.commands.size} comandos!)\n \n<:banido:801198221454999582> ${lan && lan.lang === 'en' ? "Moderation" : "Moderação"} \n<:compra:801206555495891008> ${lan && lan.lang === 'en' ? "Economy" : "Economia"} \n<:terra:801206555755675728> Geral\n<:morto:801544422462324758> ${lan && lan.lang === 'en' ? "Games" : "Jogos"} \n🎵 ${lan && lan.lang === 'en' ? "Music" : "Musica"}\n<:reputation:817746775981031454> ${lan && lan.lang === 'en' ? "Reputation" : "Reputação"}\n👨‍💻 ${lan && lan.lang === 'en' ? "Journalism" : "Jornalismo"}`)
        var m = await message.reply({
             components: separe(buttons),
-            embeds: [embed]
+            embeds: [embed],
+            fetchReply: true
         })
-        if(message.isCommand) {
-            m = await message.fetchReply()
-        }
        const filter = (button) => button.user.id === user;
     const collector = m.createMessageComponentCollector({filter});
     collector.on('collect', async b => {

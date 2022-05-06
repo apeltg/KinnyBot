@@ -8,9 +8,9 @@ module.exports = {
         cooldown: 10
     },
     run: async(client, message) => {
-        if(!message.guild.me.permissions.has('MANAGE_EMOJIS')) return message.reply(`${client.user.username} - Erro \n<a:alerta:806274799638282311> Eu não tenho permissao \`Gerenciar Emojis\``)
-        const autor = await db.coins.findOne({id: !message.author ? message.user.id:message.author.id})
-        const lan = await db.lgs.findOne({guildID: !message.author ? message.user.id:message.author.id})
+        if(!message.guild.me.permissions.has('MANAGE_EMOJIS_AND_STICKERS')) return message.reply(`${client.user.username} - Erro \n<a:alerta:806274799638282311> Eu não tenho permissao \`Gerenciar Emojis\``)
+        const autor = await db.coins.findOne({id: message.user.id})
+        const lan = await db.lgs.findOne({guildID: message.user.id})
         if(!lan) {
         if(!autor) return message.reply('Você nao tem conta!')
         const quantia = Math.floor(Math.random() * 30);
@@ -29,11 +29,11 @@ if(autor) {
         const embed = new MessageEmbed()
             .setColor('#9900f8')
             .addField(`${client.user.username} - Diversão`, `Deseja apostar em qual cor? ⬜ ou 🟥`)
-        message.reply({embeds: [embed]}).then(reag => {
+        message.reply({embeds: [embed], fetchReply: true}).then(reag => {
             reag.react('⬜')
             reag.react('🟥')
             const filter = (reaction, user) => {
-                return reaction.emoji.name === '⬜' && user.id === !message.author ? message.user.id:message.author.id
+                return reaction.emoji.name === '⬜' && user.id === message.user.id
             };
 
             const collector = reag.createReactionCollector({filter, time: 15000});
@@ -48,7 +48,7 @@ reag.reactions.removeAll()
                         .addField(`${client.user.username} - Diversão`, `Você apostou no ⬜ e caiu no ⬜ por isso ganhou ${quantia} koins`)
 
 
-await db.coins.updateOne({id: !message.author ? message.user.id:message.author.id}, {coinsc: som, cassdown: Date.now()})
+await db.coins.updateOne({id: message.user.id}, {coinsc: som, cassdown: Date.now()})
 
                     reag.edit({embeds: [embed]})
                 }
@@ -58,20 +58,20 @@ await db.coins.updateOne({id: !message.author ? message.user.id:message.author.i
                         const embed = new MessageEmbed()
                             .setColor('#9900f8')
                             .addField(`${client.user.username} - Diversão`, `Você apostou no ⬜ e caiu no 🟥 por isso perdeu ${quantia} koins`)
-await db.coins.updateOne({id: !message.author ? message.user.id:message.author.id}, {coinsc: men, cassdown: Date.now()})
+await db.coins.updateOne({id: message.user.id}, {coinsc: men, cassdown: Date.now()})
                         reag.edit({embeds: [embed]})
                     } else {
                         const embed = new MessageEmbed()
                             .setColor('#9900f8')
                             .addField(`${client.user.username} - Diversão`, `Você jogou sem ter koins, por isso está devendo ${quantia} koins pro cassino!`)
-await db.coins.updateOne({id: !message.author ? message.user.id:message.author.id}, {coinsc: men, cassdown: Date.now()})
+await db.coins.updateOne({id: message.user.id}, {coinsc: men, cassdown: Date.now()})
                         reag.edit({embeds: [embed]})
                     }
                 }
 
             });
             const filter2 = (reaction, user) => {
-                return reaction.emoji.name === '🟥' && user.id === !message.author ? message.user.id:message.author.id
+                return reaction.emoji.name === '🟥' && user.id === message.user.id
             };
 
             const collector2 = reag.createReactionCollector(filter2, {time: 15000});
@@ -83,7 +83,7 @@ reag.reactions.removeAll()
                     const embed = new MessageEmbed()
                         .setColor('#9900f8')
                         .addField(`${client.user.username} - Diversão`, `Você apostou no 🟥 e caiu no 🟥 por isso ganhou ${quantia} koins`)
-await db.coins.updateOne({id: !message.author ? message.user.id:message.author.id}, {coinsc: som, cassdown: Date.now()})
+await db.coins.updateOne({id: message.user.id}, {coinsc: som, cassdown: Date.now()})
                     reag.edit({embeds: [embed]})
                 }
                 if (`${chance}` === '20') {
@@ -91,13 +91,13 @@ await db.coins.updateOne({id: !message.author ? message.user.id:message.author.i
                         const embed = new MessageEmbed()
                             .setColor('#9900f8')
                             .addField(`${client.user.username} - Diversão`, `Você apostou no 🟥 e caiu no ⬜ por isso perdeu ${quantia} koins`)
-await db.coins.updateOne({id: !message.author ? message.user.id:message.author.id}, {coinsc: men, cassdown: Date.now()})
+await db.coins.updateOne({id: message.user.id}, {coinsc: men, cassdown: Date.now()})
                         reag.edit({embeds: [embed]})
                     } else {
                         const embed = new MessageEmbed()
                             .setColor('#9900f8')
                             .addField(`${client.user.username} - Diversão`, `Você jogou sem ter koins, por isso está devendo ${quantia} koins pro cassino!`)
-await db.coins.updateOne({id: !message.author ? message.user.id:message.author.id}, {coinsc: men, cassdown: Date.now()})
+await db.coins.updateOne({id: message.user.id}, {coinsc: men, cassdown: Date.now()})
                         reag.edit({embeds: [embed]})
                     }
                 }
@@ -125,11 +125,11 @@ await db.coins.updateOne({id: !message.author ? message.user.id:message.author.i
             const embed = new MessageEmbed()
                 .setColor('#9900f8')
                 .addField(`${client.user.username} - Fun`, `Which color do you want to bet on? ⬜ ou 🟥`)
-            message.reply({embeds: [embed]}).then(reag => {
+            message.reply({embeds: [embed], fetchReply: true}).then(reag => {
                 reag.react('⬜')
                 reag.react('🟥')
                 const filter = (reaction, user) => {
-                    return reaction.emoji.name === '⬜' && user.id === !message.author ? message.user.id:message.author.id
+                    return reaction.emoji.name === '⬜' && user.id === message.user.id
                 };
     
                 const collector = reag.createReactionCollector({filter, time: 15000});
@@ -144,7 +144,7 @@ await db.coins.updateOne({id: !message.author ? message.user.id:message.author.i
                             .addField(`${client.user.username} - Fun`, `You bet on ⬜ and fell on ⬜ so you won ${quantia} koins`)
     
     
-    await db.coins.updateOne({id: !message.author ? message.user.id:message.author.id}, {coinsc: som, cassdown: Date.now()})
+    await db.coins.updateOne({id: message.user.id}, {coinsc: som, cassdown: Date.now()})
     
                         reag.edit({embeds: [embed]})
                     }
@@ -154,20 +154,20 @@ await db.coins.updateOne({id: !message.author ? message.user.id:message.author.i
                             const embed = new MessageEmbed()
                                 .setColor('#9900f8')
                                 .addField(`${client.user.username} - Fun`, `You bet on ⬜ and fell on 🟥 so you lost ${quantia} koins`)
-    await db.coins.updateOne({id: !message.author ? message.user.id:message.author.id}, {coinsc: men, cassdown: Date.now()})
+    await db.coins.updateOne({id: message.user.id}, {coinsc: men, cassdown: Date.now()})
                             reag.edit({embeds: [embed]})
                         } else {
                             const embed = new MessageEmbed()
                                 .setColor('#9900f8')
                                 .addField(`${client.user.username} - Fun`, `You played without koins, so you owe ${quantia} koins!`)
-    await db.coins.updateOne({id: !message.author ? message.user.id:message.author.id}, {coinsc: men, cassdown: Date.now()})
+    await db.coins.updateOne({id: message.user.id}, {coinsc: men, cassdown: Date.now()})
                             reag.edit({embeds: [embed]})
                         }
                     }
     
                 });
                 const filter2 = (reaction, user) => {
-                    return reaction.emoji.name === '🟥' && user.id === !message.author ? message.user.id:message.author.id
+                    return reaction.emoji.name === '🟥' && user.id === message.user.id
                 };
     
                 const collector2 = reag.createReactionCollector(filter2, {time: 15000});
@@ -179,7 +179,7 @@ await db.coins.updateOne({id: !message.author ? message.user.id:message.author.i
                         const embed = new MessageEmbed()
                             .setColor('#9900f8')
                             .addField(`${client.user.username} - Fun`, `You bet on 🟥 and fell on 🟥 so you won ${quantia} koins`)
-    await db.coins.updateOne({id: !message.author ? message.user.id:message.author.id}, {coinsc: som, cassdown: Date.now()})
+    await db.coins.updateOne({id: message.user.id}, {coinsc: som, cassdown: Date.now()})
                         reag.edit({embeds: [embed]})
                     }
                     if (`${chance}` === '20') {
@@ -187,13 +187,13 @@ await db.coins.updateOne({id: !message.author ? message.user.id:message.author.i
                             const embed = new MessageEmbed()
                                 .setColor('#9900f8')
                                 .addField(`${client.user.username} - Fun`, `You bet on 🟥 and fell on ⬜ so you lost ${quantia} koins`)
-    await db.coins.updateOne({id: !message.author ? message.user.id:message.author.id}, {coinsc: men, cassdown: Date.now()})
+    await db.coins.updateOne({id: message.user.id}, {coinsc: men, cassdown: Date.now()})
                             reag.edit({embeds: [embed]})
                         } else {
                             const embed = new MessageEmbed()
                                 .setColor('#9900f8')
                                 .addField(`${client.user.username} - Fun`, `You played without koins, so you owe ${quantia} koins!`)
-    await db.coins.updateOne({id: !message.author ? message.user.id:message.author.id}, {coinsc: men, cassdown: Date.now()})
+    await db.coins.updateOne({id: message.user.id}, {coinsc: men, cassdown: Date.now()})
                             reag.edit({embeds: [embed]})
                         }
                     }

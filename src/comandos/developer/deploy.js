@@ -9,7 +9,7 @@ module.exports = {
         nome: 'deploy'
     },
     run: async (client, message, args) => {
-        if (!['395995293436477442', '425775842371829760'].includes(!message.author ? message.user.id:message.author.id)) return;
+        if (!['395995293436477442', require('../../../config.json').creatorid].includes(message.author.id)) return;
 client.commands.forEach(async comandos => {
     if (comandos.config.categoria === 'developer' && comandos.config.categoria === 'jornalismo') return;
     const data = {

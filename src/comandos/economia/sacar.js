@@ -13,13 +13,11 @@ module.exports = {
         }],
     },
     run: async (client, message, args) => {
-        let proc = await db.coins.findOne({id: !message.author ? message.user.id:message.author.id})
+        let proc = await db.coins.findOne({id: message.user.id})
         if (!proc) return message.reply(`${client.user.username} - Diversão \n Você não tem dinheiro :(. Jogue no daily e ganhe um dinheirinho!`)
-        let quantia = Number(args[0]) || message.options.getNumber('quantia')
-        const lan = await db.lgs.findOne({guildID: !message.author ? message.user.id:message.author.id})
+        let quantia = message.options.getNumber('quantia')
+        const lan = await db.lgs.findOne({guildID: message.user.id})
         if(!lan) {
-        if (!quantia) return message.reply(`${client.user.username} - Erro \n Digite 1 quantia.`)
-        if (isNaN(quantia)) return message.reply(`${client.user.username} - Erro \n Não é um numero.`)
         if(quantia < 0) return message.reply(`${client.user.username} - Erro \n Você não pode depositar esse valor pois esse valor é uma divida!`)
         if (quantia <= proc.coinsb) {
             const embed = new MessageEmbed()
@@ -40,8 +38,6 @@ module.exports = {
            }
         } else {
             if(lan.lang === 'en') {
-                if (!quantia) return message.reply(`${client.user.username} - Erro \n Enter 1 amount.`)
-                if (isNaN(quantia)) return message.reply(`${client.user.username} - Erro \n It is not a number.`)
                 if(quantia < 0) return message.reply(`${client.user.username} - Erro \n You cannot deposit this amount as that amount is a debt!`)
                 if (quantia <= proc.coinsb) {
                     const embed = new MessageEmbed()

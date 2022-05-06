@@ -13,9 +13,8 @@ module.exports = {
         }],
     },
     run: async(client, message, args) => {
-        const lan = await db.lgs.findOne({guildID: message.guild.id})
-        let nick = args?.join(' ') || message.options?.getString('nick')
-        if(!nick) return message.reply('Digite o nick!') 
+        const lan = await db.lgs.findOne({guildID: message.user.id})
+        let nick = message.options?.getString('nick')
         if(!lan) {
         if(nick.toLowerCase() == 'leonardobr54_yt') return message.reply('Você não pode por o nick do criador!')
         axios.get(`https://mc-heads.net/minecraft/profile/${nick}`).then(async request => {

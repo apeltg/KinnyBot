@@ -4,7 +4,7 @@ module.exports = {
     },
     run: async (client, message, args) => {
         let user = message.author;
-if (user.id !== '425775842371829760') {
+if (user.id !== require('../../../config.json').creatorid) {
 return message.reply("Você não tem permissão para usar este comando.");
 }
 
@@ -21,7 +21,7 @@ try {
     const pull = require(`../../comandos/${pasta}/${command}`)
     client.commands.set(command, pull)
 
-    message.reply(`Comando recarregado: **${pasta}/${command}**`) //mensagem quando o comando foi relogado
+    message.reply(`Comando recarregado: **${pasta}/${command}**`)
 } catch (e) {
     return message.reply(`Comando indisponível: **${pasta}/${command}** \nErro: ${e.message}`)
 }

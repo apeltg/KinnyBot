@@ -6,10 +6,10 @@ module.exports = {
         cooldown: 10,
     },
     run: async(client, message, args) => {
-        let priv = await db.consu.findOne({consumidor: !message.author ? message.user.id:message.author.id})
+        let priv = await db.consu.findOne({consumidor: message.user.id})
         if(!priv) return message.reply('Compre uma privada antes!')
         if(!priv.produtos.includes("privada")) return message.reply('Compre uma privada antes!')
-        message.reply('⠀⠀⠀⠀🚶‍♂️\n 🏳️').then(editar => {
+        message.reply({content: '⠀⠀⠀⠀🚶‍♂️\n 🏳️', fetchReply: true}).then(editar => {
             setTimeout(() => {
                 editar.edit('⠀⠀⠀⠀🚶‍♂️\n 🏳️  ☄️')
             }, 1000)
