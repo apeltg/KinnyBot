@@ -1,7 +1,5 @@
 # Kinny BOT
-Bem-vindo(a) ao código fonte oficial da Kinny BOT.
-
-Atualmente algumas partes do código estão desatualizados, portanto, certos comandos foram feitos de uma forma nada agradável...
+Bem-vindo(a) ao código fonte oficial da Kinny BOT. Atualmente algumas partes do código estão desatualizados, certos comandos foram feitos de uma forma nada agradável e serão atualizados futuramente...
 
 ## Informações
 - [Node.js 16+](https://nodejs.org/en/download/)
