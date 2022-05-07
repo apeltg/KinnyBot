@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
+const { mongodburi } = require('./config.json');
 const Schema = mongoose.Schema;
 require('colors');
 
-mongoose.connect('', {
+mongoose.connect(mongodburi, {
     useUnifiedTopology: true,
     useNewUrlParser: true,
     useFindAndModify: false,
