@@ -1,3 +1,3 @@
 module.exports = (client, node) => {
-    console.log(`[LAVALINK] Conectado ao node ${node.identifier}`.green)
-}
+    console.log(`[LAVALINK] Conectado ao node ${node.identifier}`.green);
+};
