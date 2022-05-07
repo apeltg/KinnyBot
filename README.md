@@ -1,17 +1,18 @@
-# KINNY BOT
+# Kinny BOT
+Bem-vindo(a) ao código fonte oficial da Kinny BOT.
 
-Algumas partes da kinny estão desatualizados. Então tem comandos com codigo feito de uma forma "porca".
+Atualmente algumas partes do código estão desatualizados, portanto, certos comandos foram feitos de uma forma nada agradável...
 
-Source code oficial da kinny bot
-O dono da handler utlizada na kinny foi: https://github.com/5antos/
-Foi utlizada a versão do node.js v16.10.0 
+## Informações
+- [Node.js 16+](https://nodejs.org/en/download/)
+- [discord.js@13.6.0](https://www.npmjs.com/package/discord.js/v/13.6.0)
+- Sistema de Música: Youtube Together e Lavalink (Vulkava).
+- Banco de Dados: Mongo DB e wrapper Mongoose.
 
-Foi utiizada a versão do discord.js 13.6.0
-Sistema de musica: Youtube togtheer, Lavalink (Vulkava)
-Banco de dados: Mongo DB, wrapper mongoose
 ## Creditos
 Criador - LMS5413
 
-# DISCORD SUPORTE
+# Discord de Suporte
+Você pode ser notificado a cada atualização, solicitar suporte ou apenas denunciar falhas...
 
-https://discord.gg/wzyXFBvFJr
+- **Link:** https://discord.gg/wzyXFBvFJr
