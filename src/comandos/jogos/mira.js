@@ -14,7 +14,7 @@ module.exports = {
         interaction.reply({ embeds: [embed] })
         let collector = interaction.channel.createMessageCollector({ filter: m => m.author.id === interaction.user.id, max: 1, time: 3 * 60 * 1000 })
         collector.on('collect', async m => {
-            let index1 = miras.filter(x => x.time === (miras[parseInt(m.content) - 1])?.time)
+            let index1 = miras.filter(x => x.time === (miras.filter((x, i) => miras.findIndex(y => y.time === x.time) === i)[parseInt(m.content) - 1])?.time)
             const embed = new MessageEmbed()
                 .setTitle(`${client.user.username} - Valorant mira`)
                 .setColor('#9900f8')
