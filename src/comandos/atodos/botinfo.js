@@ -21,7 +21,7 @@ module.exports = {
         const cpu = await system.cpu();
         let id = client.user.id
         const start = process.hrtime();
-        await db.prefixs.findOne({id: message.guild.id})
+        await db.lgs.findOne({id: message.guild.id})
         const stop = process.hrtime(start);
         let criado = moment(client.user.createdAt).format('LLL');
         if(!lan) {
