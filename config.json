@@ -6,7 +6,7 @@
   "creatorid": "425775842371829760",
   "fortApiKey": "",
   "nodesLava": [],
-  "mongodburi": "",
+  "mongoDB_URL": "",
   "spotify": {
     "clientId": "",
     "clientSecret": ""
